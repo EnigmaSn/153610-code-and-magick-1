@@ -1,3 +1,5 @@
+'use strict';
+
 window.renderStatistics = function (ctx, names, times) {
   // подложка
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -5,17 +7,14 @@ window.renderStatistics = function (ctx, names, times) {
   // окно
   ctx.fillStyle = 'white';
   ctx.fillRect(100, 10, 420, 270);
-  console.log('прямоугольники отрисовались');
-
   ctx.font = '16px PT Mono';
   ctx.fillStyle = 'black';
   ctx.fillText('Ура вы победили!', 235, 25);
   ctx.fillText('Список результатов:', 235, 40);
-  console.log('текст отрисовался');
 
   var histoHeight = 150; // высота гистограммы
   var histoX = 40; // ширина столбца
-  var columnIndent = 50;  // расстояние между колонками
+  var columnIndent = 50; // расстояние между колонками
   var stepX = histoX + columnIndent; // шаг через который рисуются колонки
   var youColor = 'rgba(255, 0, 0, 1)'; // цвет для колонки "Вы"
 
@@ -43,7 +42,7 @@ window.renderStatistics = function (ctx, names, times) {
 
     // выводим время в гистограмме
     ctx.fillStyle = 'rgba(0,0,0,1)';
-    ctx.fillText(time.toFixed(), stepX * i + 150, stepX + histoHeight - height - 10);     // вычитаем высоту, чтобы текст был над колонкой
+    ctx.fillText(time.toFixed(), stepX * i + 150, stepX + histoHeight - height - 10); // вычитаем высоту, чтобы текст был над колонкой
 
     // выводим имена в гистограмму
     ctx.fillText(name, stepX * i + 150, 20 + stepX + histoHeight);
