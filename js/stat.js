@@ -13,52 +13,57 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillText('Список результатов:', 235, 40);
   console.log('текст отрисовался');
 
-  var max = -1;
-  var maxIndex = -1;
+  var histoHeight = 150; // высота гистограммы
+  var histoX = 40; // ширина столбца
+  var columnIndent = 50;  // расстояние между колонками
+  var stepX = histoX + columnIndent; // шаг через который рисуются колонки
+  var youColor = 'rgba(255, 0, 0, 1)'; // цвет для колонки "Вы"
 
-  var getMaxElement = function (arr) {
-    for (var i = 0 ; i < arr.length; i++) {
-      var arrEl = arr[i];
-      if (arrEl > max) {
-        max = arrEl;
-        maxIndex = i;
-      }
+  // объявление max вне цикла!!!
+  // определяем максимальное время
+  var max = 0;
+
+  for (var i = 0; i < times.length; i++) {
+    var time = times[i];
+    var name = names[i];
+
+    // переопределяем max в зависимости от переданных данных
+    max = time > max ? time : max;
+  }
+
+  var stepY = histoHeight / max; // высота шага
+
+  // во втором цикле с той же переменной var не ставить
+  for (i = 0; i < times.length; i++) {
+    // переобъявить параметры time и name!!! (новый цикл)
+    time = times[i];
+    name = names[i];
+
+    var height = stepY * time;
+
+    // выводим время в гистограмме
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillText(time.toFixed(), stepX * i + 150, stepX + histoHeight - height - 10);     // вычитаем высоту, чтобы текст был над колонкой
+
+    // выводим имена в гистограмму
+    ctx.fillText(name, stepX * i + 150, 20 + stepX + histoHeight);
+
+    // цвета колонок
+    var opacity = (Math.random() * 0.9 + 0.1).toFixed(1);
+    // умножить на разность max и min значений и вычесть min
+
+    var otherColor = 'rgba(0, 0, 255,' + opacity + ')';
+
+    var columnColor;
+
+    if (name === 'Вы') {
+      columnColor = youColor;
+    } else {
+      columnColor = otherColor;
     }
-    return max;
-  };
 
-  // находим максимальное время
-  getMaxElement(times);
-
-  // гистограмма
-  var histogramHeight = 150;              // px;
-  //ноль вычитается чтобы начиналось с ноля
-  var step = histogramHeight / (max - 0); // px;
-
-  ctx.fillText('Худшее время: ' + max.toFixed(2) + 'мс у игрока ' + names[maxIndex], 120, 80);
-
-  var barWidth = 40; // ширина столбца
-  var indent = 50;  // расстояние между колонками
-  var initialX = 120;
-  var initialY = 250;
-  var lineHeight = 15; // высота колонки
-
-  for (var j = 0; j < times.length; j++) {
-    // ctx.fillRect(initialX, initialY + indent * j, times[j] * step, barWidth);
-    // ctx.fillText(names[j], initialX + histogramHeight, initialY + lineHeight + indent * j);
-    // столбцы
-    ctx.fillRect(initialX + indent * j, initialY, barWidth, times[j] * step - histogramHeight);
-    // имена
-    //ctx.fillText();
-
+    // рисуем сами колонки
+    ctx.fillStyle = columnColor;
+    ctx.fillRect(stepX * i + 150, 90 + histoHeight - height, histoX, height);
   }
 };
-
-// После сообщения о победе должна располагаться гистограмма времен участников. Параметры гистограммы следующие:
-
-// Высота гистограммы 150px.
-//   Ширина колонки 40px.
-//   Расстояние между колонками 50px.
-//   Цвет колонки игрока Вы rgba(255, 0, 0, 1).
-
-// Цвета колонок других игроков — синие, а прозрачность задается случайным образом.
