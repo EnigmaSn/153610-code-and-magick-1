@@ -43,32 +43,64 @@ var eyesColors = [
 var name;
 var coatColor;
 var eyesColor;
-//var arr = [name, coatColor, eyesColor];
+var similarWizards = [];
 
 function getRandomElement(min, max) {
   var randomElement = Math.floor(Math.random() * (max - min + 1)) + min;
   return randomElement;
 }
 
+var similar = document.querySelector('.setup-similar');
+similar.classList.remove('hidden');
 
-for (var i = 0; i < firstName.length; i++) {
-  var newName = firstName[i] + ' ' + lastName[i];
+var similarListElement = document.querySelector('.setup-similar-list');
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
+//console.log(similarWizardTemplate);
+
+var randomArr = [];
+
+for (var i = 0; i < 4; i++) {
+  var getRandom = getRandomElement(0, lastName.length - 1);
+  console.log(getRandom);
+
+  for (var j = 0; j < randomArr.length; j++) {
+    if (randomArr[i] === getRandom) {
+      getRandom += 1;
+    }
+  }
+  randomArr.push(getRandom);
+
+
+  var newName = firstName[getRandom] + ' ' + lastName[getRandom];
   wizardsNames.push(newName);
 
   //тут вывести рандомные функции
-  var randomWizard = getRandomElement(0, wizardsNames.length - 1);
-  var randomCoatColor = getRandomElement(0, coatColors.length - 1);
-  var randomEyesColor = getRandomElement(0, eyesColors.length - 1);
+  var getRandomName = getRandomElement(0, wizardsNames.length - 1);
+  var getRandomCoatColor = getRandomElement(0, coatColors.length - 1);
+  var getRandomEyesColor = getRandomElement(0, eyesColors.length - 1);
 
-  name = wizardsNames[randomWizard];
-  coatColor = coatColors[randomCoatColor];
-  eyesColor = eyesColors[randomEyesColor];
+  var randomName = wizardsNames[getRandomName];
+  var randomCoatColor = coatColors[getRandomCoatColor];
+  var randomEyesColor = eyesColors[getRandomEyesColor];
 
-  console.log('Полное именя: ' + name);
-  console.log('Цвет пальто: ' + coatColor);
-  console.log('Цвет глаз: ' + eyesColor);
+  console.log('Волшебник ' + i);
+  console.log('Полное имя: ' + randomName);
+  console.log('Цвет пальто: ' + randomCoatColor);
+  console.log('Цвет глаз: ' + randomEyesColor);
+
+  var wizardElement = similarWizardTemplate.cloneNode(true); // глубокое клонирование
+  //console.log(wizardElement);
+  similarListElement.appendChild(wizardElement);
+
+  var wizardName = document.querySelectorAll('.setup-similar-label');
+  var wizardCoat = document.querySelectorAll('.wizard-coat');
+  var wizardEyes = document.querySelectorAll('.wizard-eyes');
+
+  wizardName[i].textContent = randomName;
+  wizardCoat[i].style.fill = randomCoatColor;
+  wizardEyes[i].style.fill = randomEyesColor;
 }
-
+console.log(randomArr);
 
 // На основе данных, созданных в предыдущем пункте и шаблона #similar-wizard-template создайте DOM-элементы, соответствующие случайно сгенерированным волшебникам и заполните их данными из массива:
 //
