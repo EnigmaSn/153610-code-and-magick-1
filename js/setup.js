@@ -3,7 +3,7 @@
 var setup = document.querySelector('.setup');
 setup.classList.remove('hidden');
 
-var firstName = [
+var firstNames = [
   'Иван',
   'Хуан Себастьян',
   'Мария',
@@ -13,7 +13,7 @@ var firstName = [
   'Люпита',
   'Вашингтон'
 ];
-var lastName = [
+var lastNames = [
   'да Марья',
   'Верон',
   'Мирабелла',
@@ -40,70 +40,69 @@ var eyesColors = [
   'green'
 ];
 
-var name;
-var coatColor;
-var eyesColor;
-var similarWizards = [];
-
-function getRandomElement(min, max) {
-  var randomElement = Math.floor(Math.random() * (max - min + 1)) + min;
-  return randomElement;
-}
-
+var wizard = {
+  name: '',
+  coatColor: '',
+  eyesColor: ''
+};
 var similar = document.querySelector('.setup-similar');
 similar.classList.remove('hidden');
 
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
-//console.log(similarWizardTemplate);
 
-var randomArr = [];
+//функция для поиска рандомного значения с заданным max (длина массива)
+function getRandomValue(max) {
+  return parseInt(Math.random() * max, 10);
+}
 
-for (var i = 0; i < 4; i++) {
-  var getRandom = getRandomElement(0, lastName.length - 1);
-  console.log(getRandom);
+//сложение имени и фамилии в случайном порядке
+for (var j = 0; j < firstNames.length; j++) {
+  var getRandomFirstName = getRandomValue(firstNames.length);
+  var getRandomLastName = getRandomValue(lastNames.length);
+  var fullName = firstNames[getRandomFirstName] + ' ' + lastNames[getRandomLastName];
+  wizardsNames.push(fullName);
+}
 
-  for (var j = 0; j < randomArr.length; j++) {
-    if (randomArr[i] === getRandom) {
-      getRandom += 1;
-    }
-  }
-  randomArr.push(getRandom);
-
-
-  var newName = firstName[getRandom] + ' ' + lastName[getRandom];
-  wizardsNames.push(newName);
-
-  //тут вывести рандомные функции
-  var getRandomName = getRandomElement(0, wizardsNames.length - 1);
-  var getRandomCoatColor = getRandomElement(0, coatColors.length - 1);
-  var getRandomEyesColor = getRandomElement(0, eyesColors.length - 1);
+var randomWizard = function() {
+  // тут вывести рандомные функции
+  var getRandomName = getRandomValue(wizardsNames.length);
+  var getRandomCoatColor = getRandomValue(coatColors.length);
+  var getRandomEyesColor = getRandomValue(eyesColors.length);
 
   var randomName = wizardsNames[getRandomName];
   var randomCoatColor = coatColors[getRandomCoatColor];
   var randomEyesColor = eyesColors[getRandomEyesColor];
 
-  console.log('Волшебник ' + i);
-  console.log('Полное имя: ' + randomName);
-  console.log('Цвет пальто: ' + randomCoatColor);
-  console.log('Цвет глаз: ' + randomEyesColor);
+  var similarWizard = {
+    name: randomName,
+    coatColor: randomCoatColor,
+    eyesColor: randomEyesColor
+  };
 
+  return similarWizard;
+};
+//создать массив волшебников
+//функцию заполнения блока DOM-элементами на основе массива JS-объектов.
+for (var i = 0; i < 4; i++) {
+
+  var newWizard = randomWizard();
+
+  console.log('Волшебник ' + i);
+  console.log('Полное имя: ' + newWizard.name);
+  console.log('Цвет пальто: ' + newWizard.coatColor);
+  console.log('Цвет глаз: ' + newWizard.eyesColor);
+
+  // копируем шаблон
   var wizardElement = similarWizardTemplate.cloneNode(true); // глубокое клонирование
-  //console.log(wizardElement);
+  //вставляем в список волшебников
   similarListElement.appendChild(wizardElement);
 
   var wizardName = document.querySelectorAll('.setup-similar-label');
   var wizardCoat = document.querySelectorAll('.wizard-coat');
   var wizardEyes = document.querySelectorAll('.wizard-eyes');
 
-  wizardName[i].textContent = randomName;
-  wizardCoat[i].style.fill = randomCoatColor;
-  wizardEyes[i].style.fill = randomEyesColor;
+  wizardName[i].textContent = newWizard.name;
+  wizardCoat[i].style.fill = newWizard.coatColor;
+  wizardEyes[i].style.fill = newWizard.eyesColor;
 }
-console.log(randomArr);
-
-// На основе данных, созданных в предыдущем пункте и шаблона #similar-wizard-template создайте DOM-элементы, соответствующие случайно сгенерированным волшебникам и заполните их данными из массива:
-//
-//   Имя персонажа name запишите как текст в блок .setup-similar-label
-// Цвет мантии coatColor задайте как цвет заливки fill в стилях элемента .wizard-coat
-// Цвет глаз eyesColor задайте как цвет заливки fill в стилях элемента .wizard-eyes
